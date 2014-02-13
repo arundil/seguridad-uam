@@ -1,14 +1,16 @@
 package chapter2;
 
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
+import java.awt.image.ImageObserver;
 import java.awt.image.WritableRaster;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.crypto.Cipher;
@@ -29,7 +31,7 @@ public class SimpleIOExample
         throws Exception
     {
         
-    	File archivo = new File("C:\\monalisa.jpg");
+    	File archivo = new File("C:\\Users\\PCMarc Madrid\\Desktop\\test.bmp");
     	
     	BufferedImage imagenbytes = ImageIO.read(archivo);
     	WritableRaster raster = imagenbytes.getRaster();
@@ -39,8 +41,8 @@ public class SimpleIOExample
     	/*byte[]          input = new byte[] { 
                             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 
                             0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
-                            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
-                            */
+                            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };*/
+                            
         byte[]		    keyBytes = new byte[] {
                             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
                             0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
@@ -72,16 +74,20 @@ public class SimpleIOExample
         
         byte[] cipherText = bOut.toByteArray();
         
-        /*try {
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(cipherText));
-            out.write(bytes);
-        } finally {
-            if (out != null) out.close();
-        }*/
+        ImageIcon img_icon = new ImageIcon(cipherText);
+        Image img = img_icon.getImage();
+        
+		BufferedImage buf = new BufferedImage(80,80,BufferedImage.TYPE_BYTE_INDEXED);
+
+        Graphics2D g2 = buf.createGraphics();
+        g2.drawImage(img, 80, 80, null);
+        g2.dispose();
+        ImageIO.write(buf, "bmp", new File("C:\\Users\\PCMarc Madrid\\Desktop\\monalisa_encriptada.bmp"));
+        
         
         System.out.println("cipher: " + Utils.toHex(cipherText));
         
-        // decryption pass
+        //decryption pass
         
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
         
@@ -93,6 +99,18 @@ public class SimpleIOExample
         
         cOut.close();
         
+        ImageIcon img_icon2 = new ImageIcon(bOut.toByteArray());
+        Image img2 = img_icon2.getImage();
+        
+		BufferedImage buf2 = new BufferedImage(103,77,BufferedImage.TYPE_INT_ARGB_PRE);
+
+        Graphics2D g22 = buf2.createGraphics();
+        g22.drawImage(img2, 0, 0, null);
+        g22.dispose();
+        ImageIO.write(buf2, "bmp", new File("C:\\Users\\PCMarc Madrid\\Desktop\\monalisa_desencriptada.bmp"));
+        //ImageIO.write();
+        
+               
         System.out.println("plain : " + Utils.toHex(bOut.toByteArray()));
     }
 }
