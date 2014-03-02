@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
+import javax.rmi.CORBA.Util;
 
 /**
  * Tampered message, plain encryption, AES in CTR mode
@@ -30,9 +31,11 @@ public class TamperedExample
         byte[] cipherText = cipher.doFinal(Utils.toByteArray(input));
 
         // tampering step
-        
-        cipherText[9] ^= '0' ^ '9';
-        
+        System.out.println("cifer good : " + Utils.toHex(cipherText));
+        System.out.println(Utils.toHex(cipherText, 10));
+        cipherText[9] ^= '0' ^ '9';		
+        System.out.println("cifer  bad : " + Utils.toHex(cipherText));
+        System.out.println(Utils.toHex(cipherText, 10));
         // decryption step
         
         cipher.init(Cipher.DECRYPT_MODE, key, ivSpec);

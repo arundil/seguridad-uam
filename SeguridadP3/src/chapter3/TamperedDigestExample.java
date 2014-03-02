@@ -39,7 +39,7 @@ public class TamperedDigestExample
         
         // tampering step
         
-        cipherText[9] ^= '0' ^ '9';
+        cipherText[9] ^= '0' ^ '8';
         
         // replace digest
         
